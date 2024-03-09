@@ -5,13 +5,14 @@ const redisDB = createClient({
 });
 
 async function connect() {
-  await redisDB.connect((err) => {
-    if (err) {
-      throw new Error(err);
-    }
-    console.log("connected to redis");
-    return redisDB;
-  });
+  try {
+    await redisDB.connect();
+  } catch (e) {
+    console.log("Ошибка подключения к БД");
+  }
+
+  redisDB.isReady && console.log("Connected to Redis");
+  // redisDB.set("user1", "email@1.com");
 }
-const connectionToRedis = connect();
-module.exports = connectionToRedis;
+connect();
+module.exports = redisDB;

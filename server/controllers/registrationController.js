@@ -1,23 +1,16 @@
-const connectionToRedis = require("../models/dbconnection");
+const redisDB = require("../models/dbconnection");
+const ApiError = require("../errors/ApiError");
 
-async function registerNewUser(email) {
-  try {
-    const exists = await connectionToRedis.get(email);
-  } catch (err) {
-    throw new Error("Непредвиденная ошибка при получении данных из редис", err);
-  }
-  console.log(exists);
-  if (exists) {
-    throw new Error("Пользователь с таким email уже существует");
-  }
-  connectionToRedis.hSet(`user:${email}, {}`);
-}
-
-const registration = function (request, response) {
+const registration = async function (request, response, next) {
   const { email, password } = request.body;
-
+  if (!email || !password) {
+    return next(
+      ApiError.badRequest("Неккоректные имя пользователя или пароль")
+    );
+  }
+  await redisDB.set(email, password);
+  // console.log(email, password);
   //Проверить есть ли такой пользователь в БД
-  registerNewUser(email, password);
   // Проверить правильный ли пароль
 
   // Если все праавильно то ответить успешным котодм и выслать токен авторизации
