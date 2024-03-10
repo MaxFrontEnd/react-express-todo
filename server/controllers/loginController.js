@@ -1,4 +1,8 @@
-const login = function (request, response) {
+const redisDB = require("../models/dbconnection");
+const ApiError = require("../errors/ApiError");
+const bcrypt = require("bcrypt");
+
+const login = async function (request, response) {
   const { email, password } = request.body;
 
   //Проверить есть ли такой пользователь в БД
