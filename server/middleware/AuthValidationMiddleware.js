@@ -12,16 +12,10 @@ module.exports = async function authValidation(req, res, next) {
 
   //Проверяем есть ли такой пользователь в БД
   const exists = await redisDB.EXISTS(email);
-  console.log(exists);
-  console.log(exists);
   if (exists && host === "/registration") {
     return next(
       ApiError.badRequest("Пользователь с таким емайл уже существует")
     );
-    // } else if (exists && host === "/login") {
-    //   // await redisDB.json.get();
-    //   // bcrypt.compare(password);
-    // }
   }
   next();
 };
