@@ -6,7 +6,7 @@ function middleWareError(err, req, res, next) {
     res.status(err.status).json(err.message);
     return next();
   }
-  res.status(500, "Непредвиденная ошибка");
+  res.status(500).json({ message: "Непредвиденная ошибка" });
   return next();
 }
 
